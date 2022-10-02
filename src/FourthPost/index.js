@@ -1,7 +1,4 @@
 import { useEffect, useState } from 'react';
-import TodoItem from './TodoItem';
-import AddTodoForm from './AddTodoForm';
-import EditForm from './EditForm';
 import './styles.css';
 
 export default function App() {
@@ -14,15 +11,16 @@ export default function App() {
     }
   });
   const [todo, setTodo] = useState('');
-  const [value, setValue] = useState('');
+
   const [isEditing, setIsEditing] = useState(false);
+
   const [currentTodo, setCurrentTodo] = useState({});
 
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos));
   }, [todos]);
 
-  function handleAddInputChange(e) {
+  function handleInputChange(e) {
     setTodo(e.target.value);
   }
 
@@ -31,14 +29,14 @@ export default function App() {
     console.log(currentTodo);
   }
 
-  function handleAddFormSubmit(e) {
+  function handleFormSubmit(e) {
     e.preventDefault();
 
     if (todo !== '') {
       setTodos([
         ...todos,
         {
-          id: new Date(),
+          id: todos.length + 1,
           text: todo.trim(),
         },
       ]);
@@ -64,60 +62,61 @@ export default function App() {
     const updatedItem = todos.map((todo) => {
       return todo.id === id ? updatedTodo : todo;
     });
+
     setIsEditing(false);
+
     setTodos(updatedItem);
   }
 
   function handleEditClick(todo) {
     setIsEditing(true);
+
     setCurrentTodo({ ...todo });
   }
 
-  const filterTask = todos.filter((item) => {
-    return item.text.toLowerCase().includes(value.toLowerCase());
-  });
-
-  const handleToggle = (id) => {
-    const newArr = todos
-      .slice()
-      .map((todo) => (todo.id === id ? { ...todo, complete: !todo.complete } : { ...todo }));
-    setTodos([...newArr]);
-  };
-
   return (
     <div className="App">
-      <form>
-        <input
-          type="text"
-          className="formSearch"
-          name="search"
-          placeholder="Поиск по задачам "
-          onChange={(event) => setValue(event.target.value)}
-        />
-      </form>
       {isEditing ? (
-        <EditForm
-          currentTodo={currentTodo}
-          setIsEditing={setIsEditing}
-          onEditInputChange={handleEditInputChange}
-          onEditFormSubmit={handleEditFormSubmit}
-        />
+        <form onSubmit={handleEditFormSubmit}>
+          <h2>Редактировать задачу</h2>
+
+          <label htmlFor="editTodo">Редактировать задачу: </label>
+
+          <input
+            name="editTodo"
+            type="text"
+            placeholder="Редактировать задачу"
+            value={currentTodo.text}
+            onChange={handleEditInputChange}
+          />
+
+          <button type="submit">Обновить</button>
+
+          <button onClick={() => setIsEditing(false)}>Отменить</button>
+        </form>
       ) : (
-        <AddTodoForm
-          todo={todo}
-          onAddInputChange={handleAddInputChange}
-          onAddFormSubmit={handleAddFormSubmit}
-        />
+        <form onSubmit={handleFormSubmit}>
+          <h2>Добавить задачу</h2>
+
+          <label htmlFor="todo">Добавить задачу: </label>
+          <input
+            name="todo"
+            type="text"
+            placeholder="Создайте новое задание"
+            value={todo}
+            onChange={handleInputChange}
+          />
+          <button type="submit">Добавить</button>
+        </form>
       )}
 
       <ul className="todo-list">
-        {filterTask.map((todo) => (
-          <TodoItem
-            todo={todo}
-            onEditClick={handleEditClick}
-            onDeleteClick={handleDeleteClick}
-            toggleTask={handleToggle}
-          />
+        {todos.map((todo) => (
+          <li key={todo.id}>
+            {todo.text}
+            <button onClick={() => handleEditClick(todo)}>Редактировать</button>
+            <button onClick={() => handleDeleteClick(todo.id)}>Удалить</button>
+          </li>
         ))}
       </ul>
     </div>

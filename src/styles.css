@@ -53,3 +53,6 @@
 .item-text {
   width: 100%;
 }
+li {
+  list-style-type: none;
+}

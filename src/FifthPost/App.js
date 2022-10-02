@@ -14,7 +14,6 @@ export default function App() {
     }
   });
   const [todo, setTodo] = useState('');
-  const [value, setValue] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [currentTodo, setCurrentTodo] = useState({});
 
@@ -52,14 +51,12 @@ export default function App() {
 
     handleUpdateTodo(currentTodo.id, currentTodo);
   }
-
   function handleDeleteClick(id) {
     const removeItem = todos.filter((todo) => {
       return todo.id !== id;
     });
     setTodos(removeItem);
   }
-
   function handleUpdateTodo(id, updatedTodo) {
     const updatedItem = todos.map((todo) => {
       return todo.id === id ? updatedTodo : todo;
@@ -67,34 +64,12 @@ export default function App() {
     setIsEditing(false);
     setTodos(updatedItem);
   }
-
   function handleEditClick(todo) {
     setIsEditing(true);
     setCurrentTodo({ ...todo });
   }
-
-  const filterTask = todos.filter((item) => {
-    return item.text.toLowerCase().includes(value.toLowerCase());
-  });
-
-  const handleToggle = (id) => {
-    const newArr = todos
-      .slice()
-      .map((todo) => (todo.id === id ? { ...todo, complete: !todo.complete } : { ...todo }));
-    setTodos([...newArr]);
-  };
-
   return (
     <div className="App">
-      <form>
-        <input
-          type="text"
-          className="formSearch"
-          name="search"
-          placeholder="Поиск по задачам "
-          onChange={(event) => setValue(event.target.value)}
-        />
-      </form>
       {isEditing ? (
         <EditForm
           currentTodo={currentTodo}
@@ -109,14 +84,12 @@ export default function App() {
           onAddFormSubmit={handleAddFormSubmit}
         />
       )}
-
       <ul className="todo-list">
-        {filterTask.map((todo) => (
+        {todos.map((todo) => (
           <TodoItem
             todo={todo}
-            onEditClick={handleEditClick}
-            onDeleteClick={handleDeleteClick}
-            toggleTask={handleToggle}
+            onHandleEditClick={handleEditClick}
+            onHandleDeleteClick={handleDeleteClick}
           />
         ))}
       </ul>
