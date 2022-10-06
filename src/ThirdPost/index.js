@@ -1,4 +1,3 @@
-// don't forget to import useEffect from react
 import { useEffect, useState } from 'react';
 import './styles.css';
 

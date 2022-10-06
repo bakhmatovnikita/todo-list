@@ -36,7 +36,7 @@
 .strike {
   text-decoration: line-through;
 }
-.item-todo {
+.not-selected {
   display: flex;
   justify-content: space-between;
   align-items: center;
