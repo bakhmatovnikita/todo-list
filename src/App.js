@@ -1,15 +1,21 @@
 import { useState } from 'react';
-import TodoItem from './TodoItem';
-import AddTodoForm from './AddTodoForm';
-import EditForm from './EditForm';
-import './styles.css';
-import { DataList } from './MyContext';
+import { useDispatch, useSelector } from 'react-redux';
+import TodoItem from './components/TodoItem';
+import AddTodoForm from './components/AddTodoForm';
+import EditForm from './components/EditForm';
+import './css/main.css';
+import { DataList } from './components/MyContext';
+import store from './redux';
 
 export default function App() {
   const [todo, setTodo] = useState('');
   const [value, setValue] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [currentTodo, setCurrentTodo] = useState({});
+
+  const dispatch = useDispatch();
+  const todos = useSelector((store) => store.tasks.todos);
+  console.log(todos);
 
   return (
     <div className="App">
@@ -32,7 +38,13 @@ export default function App() {
             setCurrentTodo={setCurrentTodo}
           />
         ) : (
-          <AddTodoForm value={value} setValue={setValue} todo={todo} setTodo={setTodo} />
+          <AddTodoForm
+            value={value}
+            setValue={setValue}
+            todo={todo}
+            setTodo={setTodo}
+            dispatch={dispatch}
+          />
         )}
 
         <ul className="todo-list">
@@ -42,6 +54,7 @@ export default function App() {
             value={value}
             todo={todo}
             setTodo={setTodo}
+            dispatch={dispatch}
           />
         </ul>
       </DataList>

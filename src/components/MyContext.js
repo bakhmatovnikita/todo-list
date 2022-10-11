@@ -16,8 +16,6 @@ export function DataList(props) {
   useEffect(() => {
     localStorage.setItem('item', JSON.stringify(data));
   }, [data]);
-  useEffect(() => {
-    // console.log(data);
-  }, [data]);
+  useEffect(() => {}, [data]);
   return <DataContext.Provider value={[data, setData]}>{props.children}</DataContext.Provider>;
 }
